@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
-struct Comment {
-    var id: String
-    var user: User
-    var match: Match
+struct Comment: Codable, Identifiable {
+    @DocumentID var id: String?
+    var userId: String
+    var matchId: String // Referencia al ID del match
     var text: String
+    var timestamp: Date
 }
