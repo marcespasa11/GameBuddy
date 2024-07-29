@@ -15,19 +15,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     FirebaseApp.configure()
     //Auth.auth().useEmulator(withHost: "localhost", port: 9099)
     
-    print("Hola Mundo")
     return true
   }
 }
 
 @main
 struct GameBuddyApp: App {
+    @StateObject private var appState = AppState()
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appState)
         }
     }
 }

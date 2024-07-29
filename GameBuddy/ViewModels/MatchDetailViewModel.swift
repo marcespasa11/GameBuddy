@@ -31,38 +31,46 @@ class MatchDetailViewModel: ObservableObject {
     }
 
     private func joinMatch() {
-        if match.players < match.maxPlayers {
-            match.players += 1
-            isUserJoined = true
-            updateMatchInFirestore()
-        } else {
+        guard match.players < match.maxPlayers else {
             print("Match is full")
+            return
         }
+
+        match.players += 1
+        isUserJoined = true
+        updateMatchInFirestore()
     }
 
     private func leaveMatch() {
-        if match.players > 0 {
-            match.players -= 1
-            isUserJoined = false
-            updateMatchInFirestore()
-        } else {
+        guard match.players > 0 else {
             print("No players to remove")
+            return
         }
+
+        match.players -= 1
+        isUserJoined = false
+        updateMatchInFirestore()
     }
 
     private func updateMatchInFirestore() {
         guard let matchId = match.id else { return }
 
         do {
-            try db.collection("matches").document(matchId).setData(from: match)
+            try db.collection("matches").document(matchId).setData(from: match) { error in
+                if let error = error {
+                    print("Error updating match in Firestore: \(error)")
+                } else {
+                    print("Match successfully updated in Firestore")
+                }
+            }
         } catch {
-            print("Error updating match in Firestore: \(error)")
+            print("Error encoding match: \(error)")
         }
     }
 
     private func checkIfUserJoined() {
-        //Verify if user has already joined the match
-        
+        // Aquí deberías verificar si el usuario ya está unido al partido.
+        // Supongamos que la lógica para verificar si el usuario está unido se basa en algún dato en Firestore.
         isUserJoined = false
     }
 
@@ -72,8 +80,11 @@ class MatchDetailViewModel: ObservableObject {
         matchListener = db.collection("matches").document(matchId).addSnapshotListener { [weak self] documentSnapshot, error in
             if let document = documentSnapshot, document.exists {
                 do {
-                    self?.match = try document.data(as: Match.self)
-                    self?.checkIfUserJoined()
+                    let updatedMatch = try document.data(as: Match.self)
+                    DispatchQueue.main.async {
+                        self?.match = updatedMatch
+                        self?.checkIfUserJoined()
+                    }
                 } catch {
                     print("Error decoding document into Match: \(error)")
                 }

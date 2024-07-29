@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = LoginViewModel()
     @State private var isShowingAlert = false
     @State private var isLoggedIn = false
@@ -23,6 +24,7 @@ struct LoginView: View {
                     .padding()
                 
                 Button(action: {
+                    appState.isLoggedIn = true
                     viewModel.login()
                     if viewModel.isLoginSuccesful {
                         //Lògica a seguir -> redirect user to Home
