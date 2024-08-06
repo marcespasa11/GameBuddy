@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel = LoginViewModel()
     @State private var isShowingAlert = false
     @State private var isLoggedIn = false
     
     var body: some View {
-        NavigationView{
+        NavigationView {
             VStack {
                 TextField("Email", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -22,16 +22,16 @@ struct LoginView: View {
                 SecureField("Password", text: $viewModel.password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                
+                /*
                 Button(action: {
-                    appState.isLoggedIn = true
-                    viewModel.login()
-                    if viewModel.isLoginSuccesful {
-                        //Lògica a seguir -> redirect user to Home
-                        isLoggedIn = true
-                        print("Login succesful")
-                    } else {
-                        isShowingAlert = true
+                    viewModel.login { success in
+                        if success {
+                            userSession.isLoggedIn = true
+                            isLoggedIn = true
+                            print("Login successful")
+                        } else {
+                            isShowingAlert = true
+                        }
                     }
                 }) {
                     Text("Iniciar Sesión")
@@ -43,7 +43,24 @@ struct LoginView: View {
                 }
                 .padding()
                 .alert(isPresented: $isShowingAlert) {
-                    Alert(title: Text("Error"), message: Text(viewModel.loginError ?? "Unknown error"), dismissButton: .default(Text("OK")))
+                    Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
+                }*/
+                Button(action: {
+                    viewModel.login(userSession: userSession)
+                }) {
+                    Text("Log in")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(width: 220, height: 60)
+                        .background(Color.blue)
+                        .cornerRadius(15.0)
+                }
+
+                if !(viewModel.errorMessage ?? "").isEmpty {
+                    Text(viewModel.errorMessage ?? "")
+                        .foregroundColor(.red)
+                        .padding()
                 }
                 
                 NavigationLink(destination: RegisterView()) {
@@ -51,16 +68,18 @@ struct LoginView: View {
                         .foregroundColor(.blue)
                         .padding()
                 }
-                NavigationLink(destination: HomeView(), isActive: $isLoggedIn) {
+                
+                NavigationLink(destination: HomeView(), isActive: $userSession.isLoggedIn) {
                     EmptyView()
                 }
             }
             .padding()
-            .navigationTitle("Login")
+            .navigationTitle("GameBuddy")
         }
     }
 }
 
 #Preview {
     LoginView()
+        .environmentObject(UserSession())
 }

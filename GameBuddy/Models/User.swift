@@ -6,11 +6,11 @@
 //
 
 import Foundation
+import Firebase
 
 
 struct User {
     var email: String
     var name: String
-    var password: String
     var photoURL: String?
 }

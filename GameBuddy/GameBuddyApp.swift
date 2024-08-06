@@ -21,14 +21,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct GameBuddyApp: App {
-    @StateObject private var appState = AppState()
+    @StateObject private var userSession = UserSession()
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(appState)
+                .environmentObject(userSession)
         }
     }
 }

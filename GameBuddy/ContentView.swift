@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var userSession: UserSession
 
     var body: some View {
-        if appState.isLoggedIn {
+        if userSession.isLoggedIn {
             MainTabView()
         } else {
             LoginView()
@@ -20,10 +20,12 @@ struct ContentView: View {
 }
 
 struct MainTabView: View {
+    @EnvironmentObject var userSession: UserSession
     var body: some View {
         TabView {
             NavigationView {
                 HomeView()
+                    .environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "house.fill")
@@ -31,7 +33,8 @@ struct MainTabView: View {
             }
 
             NavigationView {
-                //ProfileView()
+                ProfileView()
+                    .environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "person.fill")
@@ -40,6 +43,7 @@ struct MainTabView: View {
 
             NavigationView {
                 //NewMatchView()
+                //.environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "plus.circle.fill")
