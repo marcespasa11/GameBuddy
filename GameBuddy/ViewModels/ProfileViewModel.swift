@@ -19,6 +19,7 @@ class ProfileViewModel: ObservableObject {
     @Published var showImagePicker: Bool = false // Inicializado
     @Published var showAlert: Bool = false // Inicializado
     @Published var alertMessage: String = "" // Inicializado
+    @Published var selectedImage: UIImage?
     
     var userSession: UserSession
     

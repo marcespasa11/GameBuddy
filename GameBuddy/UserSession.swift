@@ -14,15 +14,16 @@ class UserSession: ObservableObject {
     @Published var currentUser: User?
     
     init() {
-    // Observa los cambios de autenticación en Firebase
         Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
-            self?.isLoggedIn = user != nil
             if let user = user {
-                self?.fetchUserData(userID: user.uid) { fetchedUser in
-                    if let fetchedUser = fetchedUser {
-                        self?.setUser(fetchedUser)
-                    } else {
-                        self?.currentUser = nil
+                // Esperar que los datos se guarden correctamente antes de llamar a fetchUserData
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self?.fetchUserData(userID: user.uid) { fetchedUser in
+                        if let fetchedUser = fetchedUser {
+                            self?.setUser(fetchedUser)
+                        } else {
+                            self?.currentUser = nil
+                        }
                     }
                 }
             } else {
@@ -47,10 +48,10 @@ class UserSession: ObservableObject {
             db.collection("users").document(userID).getDocument { (document, error) in
                 if let document = document, document.exists {
                     if let data = document.data() {
-                        // Mapea los datos del documento al objeto User
                         let user = User(
                             email: data["email"] as? String ?? "",
-                            name: data["name"] as? String ?? ""
+                            name: data["name"] as? String ?? "Name not available",
+                            photoURL: data["photoURL"] as? String
                         )
                         completion(user)
                     } else {

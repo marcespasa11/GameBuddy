@@ -4,46 +4,19 @@
 //
 //  Created by Marc Espasa González on 24/7/24.
 //
-/*
-import Foundation
-import FirebaseAuth
 
-class RegisterViewModel: ObservableObject {
-    @Published var user = User(email:"", name: "", password: "", photoURL: nil)
-    @Published var registrationError: String?
-    @Published var isRegistrationSuccessful = false
-    
-    func register() {
-        guard !user.email.isEmpty, !user.password.isEmpty, !user.name.isEmpty else {
-            registrationError = "All fields are required"
-            return
-        }
-        
-        Auth.auth().createUser(withEmail: user.email, password: user.password) { result, error in
-            if let error = error {
-                self.registrationError = "Error registering: \(error.localizedDescription)"
-                self.isRegistrationSuccessful = false
-            } else {
-                self.isRegistrationSuccessful = true
-                self.registrationError = nil
-                
-                //Save name and photo
-                
-            }
-            
-        }
-    }
-}
-*/
-import Firebase
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
+import FirebaseStorage
 
 class RegisterViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
-    @Published var name: String = "" // Información adicional
+    @Published var name: String = ""
     @Published var errorMessage: String?
+    @Published var selectedImage: UIImage?
 
     func register(userSession: UserSession) {
         guard !email.isEmpty, !name.isEmpty, !password.isEmpty, password == confirmPassword else {
@@ -51,6 +24,7 @@ class RegisterViewModel: ObservableObject {
             return
         }
 
+        // Crear usuario en Firebase Authentication
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             if let error = error {
                 self?.errorMessage = error.localizedDescription
@@ -62,20 +36,61 @@ class RegisterViewModel: ObservableObject {
                 return
             }
 
-            // Guardar información adicional en Firestore
-            let db = Firestore.firestore()
-            db.collection("users").document(firebaseUser.uid).setData([
-                "name": self?.name ?? "",
-                "email": self?.email ?? "",
-                // Otros campos adicionales
-            ]) { error in
-                if let error = error {
-                    self?.errorMessage = "Error saving additional information: \(error.localizedDescription)"
-                } else {
-                    // Crear un usuario y actualizar el estado global
-                    let user = User(email: self?.email ?? "", name: self?.name ?? "Name not available")
-                    //userSession.setUser(user) // COMENTAT perque ja s'executa en el init() del UserSession
+            // Si hay una imagen seleccionada, súbela y luego guarda los datos del usuario en Firestore
+            if let image = self?.selectedImage {
+                self?.uploadProfileImage(image, userID: firebaseUser.uid) { url in
+                    if let url = url {
+                        self?.saveUserData(userID: firebaseUser.uid, photoURL: url.absoluteString, userSession: userSession)
+                    } else {
+                        self?.errorMessage = "Failed to upload profile image."
+                    }
                 }
+            } else {
+                // Si no hay imagen seleccionada, guarda los datos del usuario sin la URL de la imagen
+                self?.saveUserData(userID: firebaseUser.uid, photoURL: nil, userSession: userSession)
+            }
+        }
+    }
+
+    private func uploadProfileImage(_ image: UIImage, userID: String, completion: @escaping (URL?) -> Void) {
+        let storageRef = Storage.storage().reference().child("profile_images/\(userID).jpg")
+        if let imageData = image.jpegData(compressionQuality: 0.75) {
+            storageRef.putData(imageData, metadata: nil) { metadata, error in
+                if let error = error {
+                    print("Error uploading profile image: \(error.localizedDescription)")
+                    completion(nil)
+                } else {
+                    storageRef.downloadURL { url, error in
+                        if let error = error {
+                            print("Error fetching download URL: \(error.localizedDescription)")
+                            completion(nil)
+                        } else {
+                            completion(url)
+                        }
+                    }
+                }
+            }
+        } else {
+            print("Error: Image data could not be converted.")
+            completion(nil)
+        }
+    }
+
+    private func saveUserData(userID: String, photoURL: String?, userSession: UserSession) {
+        let db = Firestore.firestore()
+        var userData: [String: Any] = [
+            "name": self.name,
+            "email": self.email
+        ]
+        if let photoURL = photoURL {
+            userData["photoURL"] = photoURL
+        }
+
+        db.collection("users").document(userID).setData(userData) { [weak self] error in
+            if let error = error {
+                self?.errorMessage = "Error saving additional information: \(error.localizedDescription)"
+            } else {
+                let user = User(email: self?.email ?? "", name: self?.name ?? "", photoURL: photoURL)
             }
         }
     }

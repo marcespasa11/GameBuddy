@@ -10,6 +10,7 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var profileViewModel: ProfileViewModel
+    @State private var showingImagePicker = false
 
     init() {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(userSession: UserSession()))
@@ -18,6 +19,48 @@ struct ProfileView: View {
     var body: some View {
         VStack {
             if let user = userSession.currentUser {
+                
+                //Imatge perfil
+                if let photoURL = user.photoURL, let url = URL(string: photoURL) {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .clipShape(Circle())
+                    } placeholder: {
+                        Circle()
+                            .fill(Color.gray)
+                            .frame(width: 100, height: 100)
+                    }
+                    .onTapGesture {
+                        profileViewModel.showImagePicker = true
+                    }
+                } else {
+                    Circle()
+                        .fill(Color.gray)
+                        .frame(width: 100, height: 100)
+                        .onTapGesture {
+                            profileViewModel.showImagePicker = true
+                        }
+                }
+                if let image = profileViewModel.selectedImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                } else {
+                    Button(action: {
+                        showingImagePicker = true
+                    }) {
+                        Text("Seleccionar Foto de Perfil")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                }
                 Text("Nombre: \(user.name)")
                     .font(.title)
                     .padding()
