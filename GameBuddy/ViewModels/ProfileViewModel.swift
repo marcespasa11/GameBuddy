@@ -6,59 +6,122 @@
 //
 
 import Foundation
-import Firebase
 import FirebaseAuth
+import FirebaseFirestore
 import FirebaseStorage
-import SwiftUI
 
 class ProfileViewModel: ObservableObject {
-    @Published var userModified: User?
-    @Published var newName: String = "" // Inicializado
-    @Published var newPassword: String = "" // Inicializado
-    @Published var newPhoto: UIImage? // Opcional, no es necesario inicializar
-    @Published var showImagePicker: Bool = false // Inicializado
-    @Published var showAlert: Bool = false // Inicializado
-    @Published var alertMessage: String = "" // Inicializado
+    @Published var userSession: UserSession
     @Published var selectedImage: UIImage?
-    
-    var userSession: UserSession
-    
+    @Published var showImagePicker = false
+    @Published var showAlert = false
+    @Published var alertMessage = ""
+
     init(userSession: UserSession) {
         self.userSession = userSession
     }
-    
-    func updateProfile() {
+
+    func updateProfile(newName: String, newPassword: String) {
         guard let currentUser = Auth.auth().currentUser else { return }
-        
+
         let changeRequest = currentUser.createProfileChangeRequest()
         changeRequest.displayName = newName
-        
-        if let newPhoto = newPhoto {
-            uploadPhoto(image: newPhoto) { url in
+
+        if let selectedImage = selectedImage {
+            uploadPhoto(image: selectedImage) { [weak self] url in
+                guard let self = self else { return }
                 if let url = url {
                     changeRequest.photoURL = url
-                    self.userModified?.photoURL = url.absoluteString
+                    self.updatePhotoURLInFirestore(photoURL: url.absoluteString) { success in
+                        if success {
+                            self.userSession.currentUser?.photoURL = url.absoluteString
+                        }
+                        self.commitProfileChanges(changeRequest: changeRequest, newName: newName, newPassword: newPassword)
+                    }
+                } else {
+                    self.commitProfileChanges(changeRequest: changeRequest, newName: newName, newPassword: newPassword)
                 }
-                self.commitProfileChanges(changeRequest: changeRequest)
             }
         } else {
-            commitProfileChanges(changeRequest: changeRequest)
+            commitProfileChanges(changeRequest: changeRequest, newName: newName, newPassword: newPassword)
         }
     }
-    
-    private func commitProfileChanges(changeRequest: UserProfileChangeRequest) {
-        changeRequest.commitChanges { error in
+
+    private func commitProfileChanges(changeRequest: UserProfileChangeRequest, newName: String, newPassword: String) {
+        changeRequest.commitChanges { [weak self] error in
+            guard let self = self else { return }
             if let error = error {
                 self.alertMessage = "Error updating profile: \(error.localizedDescription)"
                 self.showAlert = true
             } else {
-                self.userModified?.name = self.newName
-                self.alertMessage = "Profile updated successfully."
-                self.showAlert = true
+                // Actualizar el nombre en Firestore
+                self.updateUserNameInFirestore(newName: newName) { success in
+                    if success {
+                        self.userSession.currentUser?.name = newName
+                        if !newPassword.isEmpty {
+                            self.changePassword(newPassword: newPassword)
+                        } else {
+                            self.alertMessage = "Profile updated successfully!"
+                            self.showAlert = true
+                        }
+                    } else {
+                        self.alertMessage = "Error updating name in database."
+                        self.showAlert = true
+                    }
+                }
             }
         }
     }
-    
+
+    private func updateUserNameInFirestore(newName: String, completion: @escaping (Bool) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            completion(false)
+            return
+        }
+
+        let db = Firestore.firestore()
+        db.collection("users").document(currentUser.uid).updateData([
+            "name": newName
+        ]) { error in
+            if let error = error {
+                print("Error updating name in Firestore: \(error.localizedDescription)")
+                completion(false)
+            } else {
+                completion(true)
+            }
+        }
+    }
+
+    private func updatePhotoURLInFirestore(photoURL: String, completion: @escaping (Bool) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            completion(false)
+            return
+        }
+
+        let db = Firestore.firestore()
+        db.collection("users").document(currentUser.uid).updateData([
+            "photoURL": photoURL
+        ]) { error in
+            if let error = error {
+                print("Error updating photo URL in Firestore: \(error.localizedDescription)")
+                completion(false)
+            } else {
+                completion(true)
+            }
+        }
+    }
+
+    private func changePassword(newPassword: String) {
+        Auth.auth().currentUser?.updatePassword(to: newPassword) { [weak self] error in
+            if let error = error {
+                self?.alertMessage = "Error changing password: \(error.localizedDescription)"
+            } else {
+                self?.alertMessage = "Profile and password updated successfully."
+            }
+            self?.showAlert = true
+        }
+    }
+
     private func uploadPhoto(image: UIImage, completion: @escaping (URL?) -> Void) {
         let storageRef = Storage.storage().reference().child("profile_images/\(UUID().uuidString).jpg")
         if let imageData = image.jpegData(compressionQuality: 0.75) {
@@ -74,61 +137,38 @@ class ProfileViewModel: ObservableObject {
             }
         }
     }
-    
-    func changePassword() {
-        guard !newPassword.isEmpty else { return }
-        
-        Auth.auth().currentUser?.updatePassword(to: newPassword) { error in
-            if let error = error {
-                self.alertMessage = "Error changing password: \(error.localizedDescription)"
-                self.showAlert = true
-            } else {
-                self.alertMessage = "Password updated successfully."
-                self.showAlert = true
-            }
-        }
-    }
-    
+
     func signOut() {
         do {
             try Auth.auth().signOut()
             userSession.logout()
         } catch {
-            self.alertMessage = "Error signing out: \(error.localizedDescription)"
-            self.showAlert = true
+            alertMessage = "Error logging out: \(error.localizedDescription)"
+            showAlert = true
         }
     }
-    
+
     func deleteUser() {
-        guard let currentUser = Auth.auth().currentUser else {
-            alertMessage = "No hay usuario autenticado."
-            showAlert = true
-            return
-        }
-        
+        guard let currentUser = Auth.auth().currentUser else { return }
         let userID = currentUser.uid
-        let db = Firestore.firestore()
-        
-        // Eliminar datos del usuario de Firestore
-        db.collection("users").document(userID).delete { error in
+
+        currentUser.delete { [weak self] error in
             if let error = error {
-                self.alertMessage = "Error al eliminar los datos del usuario: \(error.localizedDescription)"
-                self.showAlert = true
+                self?.alertMessage = "Error deleting user: \(error.localizedDescription)"
+                self?.showAlert = true
                 return
             }
-            
-            // Eliminar la cuenta de autenticación del usuario
-            currentUser.delete { error in
+
+            // Eliminar los datos del usuario en Firestore
+            Firestore.firestore().collection("users").document(userID).delete { error in
                 if let error = error {
-                    self.alertMessage = "Error al eliminar la cuenta de usuario: \(error.localizedDescription)"
-                    self.showAlert = true
-                    return
+                    self?.alertMessage = "Error deleting data in Firestore: \(error.localizedDescription)"
+                    self?.showAlert = false
+                } else {
+                    self?.alertMessage = "User deleted successfully."
+                    self?.showAlert = true
+                    self?.userSession.logout()
                 }
-                
-                // Si todo fue exitoso
-                self.alertMessage = "Cuenta y datos eliminados exitosamente."
-                self.showAlert = true
-                self.userSession.logout() // Opcional: Limpiar la sesión
             }
         }
     }

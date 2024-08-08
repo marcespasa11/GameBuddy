@@ -22,29 +22,6 @@ struct LoginView: View {
                 SecureField("Password", text: $viewModel.password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                /*
-                Button(action: {
-                    viewModel.login { success in
-                        if success {
-                            userSession.isLoggedIn = true
-                            isLoggedIn = true
-                            print("Login successful")
-                        } else {
-                            isShowingAlert = true
-                        }
-                    }
-                }) {
-                    Text("Iniciar Sesión")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .padding()
-                .alert(isPresented: $isShowingAlert) {
-                    Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
-                }*/
                 Button(action: {
                     viewModel.login(userSession: userSession)
                 }) {
