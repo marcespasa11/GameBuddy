@@ -91,6 +91,7 @@ class RegisterViewModel: ObservableObject {
                 self?.errorMessage = "Error saving additional information: \(error.localizedDescription)"
             } else {
                 let user = User(email: self?.email ?? "", name: self?.name ?? "", photoURL: photoURL)
+                userSession.setUser(user)
             }
         }
     }
