@@ -18,6 +18,4 @@ struct Match: Identifiable, Codable {
     var maxPlayers: Int
     var description: String
     var emailsOfPlayers: [String] // Lista de correos de los jugadores
-    var comments: [Comment]
-
 }

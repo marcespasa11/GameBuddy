@@ -42,8 +42,7 @@ class NewMatchViewModel: ObservableObject {
             players: 1,
             maxPlayers: maxPlayers,
             description: matchDescription,
-            emailsOfPlayers: [user.email], // Agregamos el correo del usuario como primer jugador
-            comments: []
+            emailsOfPlayers: [user.email] // Agregamos el correo del usuario como primer jugador
         )
         
         saveMatchToFirestore(match)
