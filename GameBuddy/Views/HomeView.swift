@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel = HomeViewModel()
 
     var body: some View {
         NavigationView {
             List(viewModel.matches) { match in
-                NavigationLink(destination: MatchDetailView(match: match)) {
+                NavigationLink(destination: MatchDetailView(match: match, userSession: userSession)
+                    .environmentObject(userSession)) {
                     VStack(alignment: .leading) {
                         Text(match.type)
                             .font(.headline)
@@ -31,7 +33,4 @@ struct HomeView: View {
             .navigationTitle("Home")
         }
     }
-}
-#Preview {
-    HomeView()
 }

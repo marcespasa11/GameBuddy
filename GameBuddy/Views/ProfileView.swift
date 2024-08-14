@@ -19,7 +19,7 @@ struct ProfileView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             if let user = userSession.currentUser {
 
                 // Imagen de perfil
@@ -28,12 +28,15 @@ struct ProfileView: View {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 100, height: 100)
+                            .frame(width: 120, height: 120)
                             .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                            .shadow(radius: 7)
                     } placeholder: {
                         Circle()
                             .fill(Color.gray)
-                            .frame(width: 100, height: 100)
+                            .frame(width: 120, height: 120)
+                            .shadow(radius: 7)
                     }
                     .onTapGesture {
                         profileViewModel.showImagePicker = true
@@ -41,63 +44,93 @@ struct ProfileView: View {
                 } else {
                     Circle()
                         .fill(Color.gray)
-                        .frame(width: 100, height: 100)
+                        .frame(width: 120, height: 120)
+                        .shadow(radius: 7)
                         .onTapGesture {
                             profileViewModel.showImagePicker = true
                         }
                 }
 
-                TextField("New name", text: $newName)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .onAppear {
-                        self.newName = user.name // Cargar el nombre actual del usuario
-                    }
+                // Correo del usuario (no editable)
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Email")
+                        .font(.headline)
+                    Text(user.email)
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
+                        .disabled(true) // Desactivar la edición
+                }
+                .padding(.horizontal)
 
-                SecureField("New password", text: $newPassword)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                // Campos de texto para cambiar el nombre y la contraseña
+                VStack(alignment: .leading, spacing: 10) {
+                    TextField("New name", text: $newName)
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
+                        .onAppear {
+                            self.newName = user.name
+                        }
 
+                    SecureField("New password", text: $newPassword)
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
+
+                // Botón para guardar cambios
                 Button(action: {
                     profileViewModel.updateProfile(newName: newName, newPassword: newPassword)
                 }) {
-                    Text("Save changes")
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                    HStack {
+                        Image(systemName: "checkmark.circle")
+                        Text("Save changes")
+                    }
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
                 }
-                .padding()
+                .padding(.horizontal)
 
-                // Mensaje de confirmación
-                if !profileViewModel.alertMessage.isEmpty {
-                    Text(profileViewModel.alertMessage)
-                        .font(.subheadline)
-                        .foregroundColor(.green)
-                        .padding(.top, 10)
-                }
 
+                Spacer()
+
+                // Botón para cerrar sesión
                 Button(action: {
                     profileViewModel.signOut()
                 }) {
-                    Text("Log out")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(width: 220, height: 60)
-                        .background(Color.red)
-                        .cornerRadius(15.0)
-                }.padding()
-
-                Button(action: profileViewModel.deleteUser) {
-                    Text("Delete user")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                    HStack {
+                        Image(systemName: "arrow.backward.circle")
+                        Text("Log out")
+                    }
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
                 }
-                .padding()
+                .padding(.horizontal)
+
+                // Botón para eliminar la cuenta
+                Button(action: profileViewModel.deleteUser) {
+                    HStack {
+                        Image(systemName: "trash.circle")
+                        Text("Delete user")
+                    }
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                .padding(.horizontal)
             } else {
                 Text("Cargando perfil...")
                     .font(.title)
@@ -114,5 +147,7 @@ struct ProfileView: View {
         .alert(isPresented: $profileViewModel.showAlert) {
             Alert(title: Text("Información"), message: Text(profileViewModel.alertMessage), dismissButton: .default(Text("OK")))
         }
+        .padding()
+        .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
     }
 }

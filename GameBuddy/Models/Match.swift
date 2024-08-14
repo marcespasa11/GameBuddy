@@ -17,6 +17,7 @@ struct Match: Identifiable, Codable {
     var players: Int
     var maxPlayers: Int
     var description: String
+    var emailsOfPlayers: [String] // Lista de correos de los jugadores
     var comments: [Comment]
 
     enum CodingKeys: String, CodingKey {
@@ -28,6 +29,7 @@ struct Match: Identifiable, Codable {
         case players
         case maxPlayers
         case description
+        case emailsOfPlayers // Asegúrate de incluir este campo en el enum
         case comments
     }
 
@@ -44,6 +46,7 @@ struct Match: Identifiable, Codable {
         players = try container.decode(Int.self, forKey: .players)
         maxPlayers = try container.decode(Int.self, forKey: .maxPlayers)
         description = try container.decode(String.self, forKey: .description)
+        emailsOfPlayers = try container.decodeIfPresent([String].self, forKey: .emailsOfPlayers) ?? [] // Decodificar emailsOfPlayers
 
         do {
             comments = try container.decode([Comment].self, forKey: .comments)
@@ -62,6 +65,7 @@ struct Match: Identifiable, Codable {
         try container.encode(players, forKey: .players)
         try container.encode(maxPlayers, forKey: .maxPlayers)
         try container.encode(description, forKey: .description)
+        try container.encode(emailsOfPlayers, forKey: .emailsOfPlayers) // Codificar emailsOfPlayers
         try container.encode(comments, forKey: .comments)
     }
 }

@@ -10,9 +10,15 @@ import FirebaseFirestoreSwift
 import Combine
 
 class HomeViewModel: ObservableObject {
+    //@Published var userSession: UserSession
     @Published var matches: [Match] = []
     private var db = Firestore.firestore()
     private var cancellables = Set<AnyCancellable>()
+    /*
+    init(userSession: UserSession) {
+        self.userSession = userSession
+    }
+     */
     
     func fetchMatches() {
         db.collection("matches").addSnapshotListener { [weak self] (querySnapshot, error) in
