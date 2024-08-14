@@ -11,6 +11,7 @@ import FirebaseFirestoreSwift
 struct MatchDetailView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel: MatchDetailViewModel
+    @State private var isShowingEditView = false
 
     init(match: Match, userSession: UserSession) {
         _viewModel = StateObject(wrappedValue: MatchDetailViewModel(match: match, userSession: userSession))
@@ -108,18 +109,37 @@ struct MatchDetailView: View {
                 Spacer()
 
                 if viewModel.isUserOrganizer {
-                    Button(action: {
-                        viewModel.deleteMatch()
-                    }) {
-                        Text("Delete Match")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
+                    HStack {
+                        Button(action: {
+                            isShowingEditView.toggle()
+                        }) {
+                            Text("Edit Match")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.top, 20)
+                        .sheet(isPresented: $isShowingEditView) {
+                            EditMatchView(match: viewModel.match, userSession: userSession)
+                                .environmentObject(userSession)
+                        }
+                        
+                        Button(action: {
+                            viewModel.deleteMatch()
+                        }) {
+                            Text("Delete Match")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.red)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.top, 20)
                     }
-                    .padding(.top, 20)
                 } else {
                     Button(action: {
                         viewModel.toggleMatchParticipation()
