@@ -42,8 +42,8 @@ struct MainTabView: View {
             }
 
             NavigationView {
-                //NewMatchView()
-                //.environmentObject(userSession)
+                NewMatchView(userSession: userSession)
+                .environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "plus.circle.fill")

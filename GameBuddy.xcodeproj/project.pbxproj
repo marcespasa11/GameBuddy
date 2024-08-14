@@ -35,6 +35,8 @@
 		7E2590352C594CA900259A3E /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2590342C594CA900259A3E /* ImagePicker.swift */; };
 		7E2590362C594CA900259A3E /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2590342C594CA900259A3E /* ImagePicker.swift */; };
 		7E2590372C594CA900259A3E /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2590342C594CA900259A3E /* ImagePicker.swift */; };
+		7E2590392C6CB20E00259A3E /* NewMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2590382C6CB20E00259A3E /* NewMatchView.swift */; };
+		7E25903B2C6CB22500259A3E /* NewMatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25903A2C6CB22500259A3E /* NewMatchViewModel.swift */; };
 		7E9F5AAC2C3EE72D00667FB7 /* GameBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5AAB2C3EE72D00667FB7 /* GameBuddyApp.swift */; };
 		7E9F5AAE2C3EE72D00667FB7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5AAD2C3EE72D00667FB7 /* ContentView.swift */; };
 		7E9F5AB02C3EE72E00667FB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E9F5AAF2C3EE72E00667FB7 /* Assets.xcassets */; };
@@ -86,6 +88,8 @@
 		7E25902C2C59498500259A3E /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		7E2590302C59499100259A3E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		7E2590342C594CA900259A3E /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		7E2590382C6CB20E00259A3E /* NewMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMatchView.swift; sourceTree = "<group>"; };
+		7E25903A2C6CB22500259A3E /* NewMatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMatchViewModel.swift; sourceTree = "<group>"; };
 		7E9F5AA82C3EE72D00667FB7 /* GameBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E9F5AAB2C3EE72D00667FB7 /* GameBuddyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBuddyApp.swift; sourceTree = "<group>"; };
 		7E9F5AAD2C3EE72D00667FB7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -153,6 +157,7 @@
 				7E2590202C54EF4600259A3E /* HomeView.swift */,
 				7E2590242C54FC9D00259A3E /* MatchDetailView.swift */,
 				7E2590302C59499100259A3E /* ProfileView.swift */,
+				7E2590382C6CB20E00259A3E /* NewMatchView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -165,6 +170,7 @@
 				7E25901E2C54EF3600259A3E /* HomeViewModel.swift */,
 				7E2590222C54FC8500259A3E /* MatchDetailViewModel.swift */,
 				7E25902C2C59498500259A3E /* ProfileViewModel.swift */,
+				7E25903A2C6CB22500259A3E /* NewMatchViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -382,6 +388,7 @@
 				7E25900C2C4F129700259A3E /* Comment.swift in Sources */,
 				7E2590352C594CA900259A3E /* ImagePicker.swift in Sources */,
 				7E2590112C51689700259A3E /* RegisterViewModel.swift in Sources */,
+				7E25903B2C6CB22500259A3E /* NewMatchViewModel.swift in Sources */,
 				7E2590062C4F08E300259A3E /* User.swift in Sources */,
 				7E25900A2C4F11F200259A3E /* Location.swift in Sources */,
 				7E2590292C5807F500259A3E /* UserSession.swift in Sources */,
@@ -389,6 +396,7 @@
 				7E2590132C516E0900259A3E /* RegisterView.swift in Sources */,
 				7E2590312C59499100259A3E /* ProfileView.swift in Sources */,
 				7E9F5AAC2C3EE72D00667FB7 /* GameBuddyApp.swift in Sources */,
+				7E2590392C6CB20E00259A3E /* NewMatchView.swift in Sources */,
 				7E2590082C4F0EE300259A3E /* Match.swift in Sources */,
 				7E2590212C54EF4600259A3E /* HomeView.swift in Sources */,
 				7E2590172C52E5FF00259A3E /* LoginView.swift in Sources */,
