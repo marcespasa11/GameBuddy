@@ -11,13 +11,15 @@ import FirebaseFirestoreSwift
 
 class MatchDetailViewModel: ObservableObject {
     @Published var match: Match
+    @Published var comments: [Comment] = []
+    @Published var newCommentText: String = ""
     @Published var isUserJoined: Bool = false
     @Published var alertMessage: String = ""
     private var db = Firestore.firestore()
     @Published var userSession: UserSession
-    
 
     private var matchListener: ListenerRegistration?
+    private var commentsListener: ListenerRegistration?
 
     init(match: Match, userSession: UserSession) {
         self.match = match
@@ -29,6 +31,7 @@ class MatchDetailViewModel: ObservableObject {
         } else {
             self.checkIfUserJoined()
             self.listenToMatchChanges()
+            self.loadComments()
         }
     }
 
@@ -143,7 +146,39 @@ class MatchDetailViewModel: ObservableObject {
         }
     }
 
+    private func loadComments() {
+        guard let matchId = match.id else { return }
+        commentsListener = db.collection("comments")
+            .whereField("matchId", isEqualTo: matchId)
+            .order(by: "timestamp", descending: false)
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                if let error = error {
+                    print("Error loading comments: \(error)")
+                    return
+                }
+                self?.comments = querySnapshot?.documents.compactMap { document in
+                    try? document.data(as: Comment.self)
+                } ?? []
+            }
+    }
+
+    func addComment() {
+        guard let user = userSession.currentUser else { return }
+        guard let matchId = match.id else { return }
+        let newComment = Comment(userId: user.email, matchId: matchId, text: newCommentText, timestamp: Date())
+
+        do {
+            _ = try db.collection("comments").addDocument(from: newComment)
+            // Actualizar comentarios localmente para que se reflejen de inmediato
+            comments.append(newComment)
+            newCommentText = ""
+        } catch {
+            print("Error adding comment: \(error)")
+        }
+    }
+
     deinit {
         matchListener?.remove()
+        commentsListener?.remove()
     }
 }
