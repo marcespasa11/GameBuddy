@@ -123,7 +123,7 @@ struct MatchDetailView: View {
                         }
                         .padding(.top, 20)
                         .sheet(isPresented: $isShowingEditView) {
-                            EditMatchView(match: viewModel.match, userSession: userSession)
+                            EditMatchView(match: viewModel.match)
                                 .environmentObject(userSession)
                         }
                         

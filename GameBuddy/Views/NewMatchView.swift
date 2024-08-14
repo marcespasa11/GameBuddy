@@ -12,8 +12,8 @@ struct NewMatchView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel: NewMatchViewModel
 
-    init(userSession: UserSession) {
-        _viewModel = StateObject(wrappedValue: NewMatchViewModel(userSession: userSession))
+    init() {
+        _viewModel = StateObject(wrappedValue: NewMatchViewModel(userSession: UserSession()))
     }
 
     var body: some View {

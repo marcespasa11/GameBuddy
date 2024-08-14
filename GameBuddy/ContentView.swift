@@ -33,7 +33,7 @@ struct MainTabView: View {
             }
 
             NavigationView {
-                NewMatchView(userSession: userSession)
+                NewMatchView()
                 .environmentObject(userSession)
             }
             .tabItem {
