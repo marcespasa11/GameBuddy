@@ -12,14 +12,13 @@ struct MatchDetailView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel: MatchDetailViewModel
     @State private var isShowingEditView = false
-    @State private var scrollViewProxy: ScrollViewProxy?
 
     init(match: Match, userSession: UserSession) {
         _viewModel = StateObject(wrappedValue: MatchDetailViewModel(match: match, userSession: userSession))
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
+        ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 15) {
                     // Añadir un logo en la parte superior
@@ -98,20 +97,27 @@ struct MatchDetailView: View {
                         .font(.headline)
                         .padding(.top, 10)
 
-                    ForEach(viewModel.comments) { comment in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(comment.userId)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                            Text(comment.text)
-                                .foregroundColor(.primary)
-                            Text(comment.timestamp, style: .time)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 10) {
+                            ForEach(viewModel.comments) { comment in
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(comment.userId)
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                    Text(comment.text)
+                                        .foregroundColor(.primary)
+                                    Text(comment.timestamp, style: .time)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.bottom, 10)
+                                .id(comment.id) // Añadir ID para la navegación con ScrollViewProxy
+                            }
                         }
-                        .padding(.bottom, 10)
-                        .id(comment.id) // Añadir ID para la navegación con ScrollViewProxy
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal)
                     }
+                    .frame(height: 200) // Fija la altura del ScrollView para comentarios
 
                     Divider().padding(.vertical)
 
@@ -120,7 +126,6 @@ struct MatchDetailView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         Button(action: {
                             viewModel.addComment()
-                            scrollToBottom(proxy: proxy) // Desplazarse al final al agregar un comentario
                         }) {
                             Text("Send")
                                 .bold()
@@ -135,9 +140,20 @@ struct MatchDetailView: View {
                     .padding(.vertical, 10)
 
                     Spacer()
+                        .frame(height: 100) // Añadir un espaciador para evitar que la vista sea tapada por los botones flotantes
+                }
+                .padding()
+                .navigationTitle("Match Detail")
+                .background(Color(.systemGray6)) // Fondo suave para la vista
+            }
 
-                    if viewModel.isUserOrganizer {
-                        HStack {
+            // Botones flotantes
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    VStack(spacing: 16) {
+                        if viewModel.isUserOrganizer {
                             Button(action: {
                                 isShowingEditView.toggle()
                             }) {
@@ -149,7 +165,6 @@ struct MatchDetailView: View {
                                     .foregroundColor(.white)
                                     .cornerRadius(8)
                             }
-                            .padding(.top, 20)
                             .sheet(isPresented: $isShowingEditView) {
                                 EditMatchView(match: viewModel.match)
                                     .environmentObject(userSession)
@@ -166,36 +181,24 @@ struct MatchDetailView: View {
                                     .foregroundColor(.white)
                                     .cornerRadius(8)
                             }
-                            .padding(.top, 20)
+                        } else {
+                            Button(action: {
+                                viewModel.toggleMatchParticipation()
+                            }) {
+                                Text(viewModel.isUserJoined ? "Leave Match" : "Join Match")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(viewModel.isUserJoined ? Color.red : Color.green)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
                         }
-                    } else {
-                        Button(action: {
-                            viewModel.toggleMatchParticipation()
-                        }) {
-                            Text(viewModel.isUserJoined ? "Leave Match" : "Join Match")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(viewModel.isUserJoined ? Color.red : Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
-                        }
-                        .padding(.top, 20)
                     }
+                    .padding(.bottom, 16) // Añadir espacio en la parte inferior
+                    .padding(.trailing, 16) // Añadir espacio en la parte derecha
                 }
-                .padding()
-                .navigationTitle("Match Detail")
-                .background(Color(.systemGray6)) // Fondo suave para la vista
             }
-            .onAppear {
-                self.scrollViewProxy = proxy
-            }
-        }
-    }
-
-    private func scrollToBottom(proxy: ScrollViewProxy) {
-        if let lastComment = viewModel.comments.last {
-            proxy.scrollTo(lastComment.id, anchor: .bottom)
         }
     }
 }
