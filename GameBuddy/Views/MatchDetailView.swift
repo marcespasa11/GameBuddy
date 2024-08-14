@@ -70,11 +70,23 @@ struct MatchDetailView: View {
                 Text("Players Joined:")
                     .font(.headline)
                     .padding(.bottom, 5)
-                ForEach(viewModel.match.emailsOfPlayers, id: \.self) { email in
-                    Text(email)
-                        .font(.body)
-                        .padding(.bottom, 2)
-                        .foregroundColor(.primary)
+                
+                // Lista de correos con el organizador marcado
+                ForEach(viewModel.match.emailsOfPlayers.indices, id: \.self) { index in
+                    HStack {
+                        Text(viewModel.match.emailsOfPlayers[index])
+                            .font(.body)
+                            .padding(.bottom, 2)
+                            .foregroundColor(.primary)
+                        
+                        if index == 0 {
+                            Text("Organizer")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.blue)
+                                .padding(.leading, 5)
+                        }
+                    }
                 }
                 
                 Divider().padding(.vertical)
@@ -95,18 +107,33 @@ struct MatchDetailView: View {
 
                 Spacer()
 
-                Button(action: {
-                    viewModel.toggleMatchParticipation()
-                }) {
-                    Text(viewModel.isUserJoined ? "Leave Match" : "Join Match")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(viewModel.isUserJoined ? Color.red : Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                if viewModel.isUserOrganizer {
+                    Button(action: {
+                        viewModel.deleteMatch()
+                    }) {
+                        Text("Delete Match")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, 20)
+                } else {
+                    Button(action: {
+                        viewModel.toggleMatchParticipation()
+                    }) {
+                        Text(viewModel.isUserJoined ? "Leave Match" : "Join Match")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(viewModel.isUserJoined ? Color.red : Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, 20)
                 }
-                .padding(.top, 20)
             }
             .padding()
             .navigationTitle("Match Detail")

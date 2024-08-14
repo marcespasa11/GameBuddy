@@ -33,21 +33,21 @@ struct MainTabView: View {
             }
 
             NavigationView {
-                ProfileView()
-                    .environmentObject(userSession)
-            }
-            .tabItem {
-                Image(systemName: "person.fill")
-                Text("Profile")
-            }
-
-            NavigationView {
                 NewMatchView(userSession: userSession)
                 .environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "plus.circle.fill")
                 Text("New Match")
+            }
+            
+            NavigationView {
+                ProfileView()
+                    .environmentObject(userSession)
+            }
+            .tabItem {
+                Image(systemName: "person.fill")
+                Text("Profile")
             }
         }
     }

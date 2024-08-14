@@ -32,8 +32,11 @@ class MatchDetailViewModel: ObservableObject {
         }
     }
 
+    var isUserOrganizer: Bool {
+        return match.userId == userSession.currentUser?.email
+    }
+
     func toggleMatchParticipation() {
-        checkIfUserJoined()
         if isUserJoined {
             leaveMatch()
         } else {
@@ -91,6 +94,24 @@ class MatchDetailViewModel: ObservableObject {
         } catch {
             print("Error encoding match: \(error)")
             self.alertMessage = "Failed to encode match data"
+        }
+    }
+
+    func deleteMatch() {
+        guard let matchId = match.id else {
+            print("Error: Match ID is nil. Cannot delete match in Firestore.")
+            alertMessage = "Match ID is missing. Cannot delete match."
+            return
+        }
+
+        db.collection("matches").document(matchId).delete { error in
+            if let error = error {
+                print("Error deleting match: \(error)")
+                self.alertMessage = "Failed to delete match."
+            } else {
+                print("Match successfully deleted.")
+                self.alertMessage = "Match deleted successfully."
+            }
         }
     }
 
