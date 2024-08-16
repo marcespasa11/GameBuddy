@@ -39,6 +39,8 @@
 		7E25903B2C6CB22500259A3E /* NewMatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25903A2C6CB22500259A3E /* NewMatchViewModel.swift */; };
 		7E25903D2C6D0AA200259A3E /* EditMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25903C2C6D0AA200259A3E /* EditMatchView.swift */; };
 		7E25903F2C6D0AC400259A3E /* EditMatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25903E2C6D0AC400259A3E /* EditMatchViewModel.swift */; };
+		7E2590422C6E184400259A3E /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 7E2590412C6E184400259A3E /* GoogleMaps */; };
+		7E2590442C6F4F8700259A3E /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7E2590432C6F4F8700259A3E /* Config.xcconfig */; };
 		7E9F5AAC2C3EE72D00667FB7 /* GameBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5AAB2C3EE72D00667FB7 /* GameBuddyApp.swift */; };
 		7E9F5AAE2C3EE72D00667FB7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5AAD2C3EE72D00667FB7 /* ContentView.swift */; };
 		7E9F5AB02C3EE72E00667FB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E9F5AAF2C3EE72E00667FB7 /* Assets.xcassets */; };
@@ -94,6 +96,7 @@
 		7E25903A2C6CB22500259A3E /* NewMatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMatchViewModel.swift; sourceTree = "<group>"; };
 		7E25903C2C6D0AA200259A3E /* EditMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMatchView.swift; sourceTree = "<group>"; };
 		7E25903E2C6D0AC400259A3E /* EditMatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMatchViewModel.swift; sourceTree = "<group>"; };
+		7E2590432C6F4F8700259A3E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		7E9F5AA82C3EE72D00667FB7 /* GameBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E9F5AAB2C3EE72D00667FB7 /* GameBuddyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBuddyApp.swift; sourceTree = "<group>"; };
 		7E9F5AAD2C3EE72D00667FB7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -115,6 +118,7 @@
 			files = (
 				7E9F5AE22C4D7E1900667FB7 /* FirebaseDatabaseSwift in Frameworks */,
 				7E9F5ADC2C4D7E1900667FB7 /* FirebaseAnalyticsSwift in Frameworks */,
+				7E2590422C6E184400259A3E /* GoogleMaps in Frameworks */,
 				7E9F5ADE2C4D7E1900667FB7 /* FirebaseAuth in Frameworks */,
 				7E9F5AE42C4D7E1900667FB7 /* FirebaseFunctions in Frameworks */,
 				7E9F5AE62C4D7E1900667FB7 /* FirebaseStorage in Frameworks */,
@@ -215,6 +219,7 @@
 				7E2590342C594CA900259A3E /* ImagePicker.swift */,
 				7E9F5AAF2C3EE72E00667FB7 /* Assets.xcassets */,
 				7E9F5AB12C3EE72E00667FB7 /* Preview Content */,
+				7E2590432C6F4F8700259A3E /* Config.xcconfig */,
 			);
 			path = GameBuddy;
 			sourceTree = "<group>";
@@ -270,6 +275,7 @@
 				7E9F5AE52C4D7E1900667FB7 /* FirebaseStorage */,
 				7E2590182C541A0A00259A3E /* FirebaseFirestore */,
 				7E25901A2C541A0A00259A3E /* FirebaseFirestoreSwift */,
+				7E2590412C6E184400259A3E /* GoogleMaps */,
 			);
 			productName = GameBuddy;
 			productReference = 7E9F5AA82C3EE72D00667FB7 /* GameBuddy.app */;
@@ -345,6 +351,7 @@
 			mainGroup = 7E9F5A9F2C3EE72D00667FB7;
 			packageReferences = (
 				7E9F5AD82C4D7E1900667FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				7E2590402C6E184400259A3E /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 			);
 			productRefGroup = 7E9F5AA92C3EE72D00667FB7 /* Products */;
 			projectDirPath = "";
@@ -362,6 +369,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E2590442C6F4F8700259A3E /* Config.xcconfig in Resources */,
 				7E9F5AB32C3EE72E00667FB7 /* Preview Assets.xcassets in Resources */,
 				7E9F5AB02C3EE72E00667FB7 /* Assets.xcassets in Resources */,
 				7E9F5AD62C4D798600667FB7 /* GoogleService-Info.plist in Resources */,
@@ -752,6 +760,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7E2590402C6E184400259A3E /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
 		7E9F5AD82C4D7E1900667FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -772,6 +788,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7E9F5AD82C4D7E1900667FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
+		};
+		7E2590412C6E184400259A3E /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7E2590402C6E184400259A3E /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
 		};
 		7E9F5AD92C4D7E1900667FB7 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
