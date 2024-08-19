@@ -15,9 +15,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
     //Auth.auth().useEmulator(withHost: "localhost", port: 9099)
-      if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GOOGLE_MAPS_API_KEY") as? String {
-                  GMSServices.provideAPIKey(apiKey)
-              }
+      if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GOOGLE_MAPS_API_KEY") as? String
+      {
+          GMSServices.provideAPIKey(apiKey)
+      } else {
+          print("Google Maps API Key not found")
+      }
     return true
   }
 }

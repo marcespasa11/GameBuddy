@@ -21,6 +21,7 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @EnvironmentObject var userSession: UserSession
+    @StateObject private var mapViewModel = MatchMapViewModel()
     var body: some View {
         TabView {
             NavigationView {
@@ -30,6 +31,16 @@ struct MainTabView: View {
             .tabItem {
                 Image(systemName: "house.fill")
                 Text("Home")
+            }
+            
+            NavigationView {
+                MatchMapViewContainer()
+                    .edgesIgnoringSafeArea(.all)
+                    .navigationTitle("Match Locations")
+            }
+            .tabItem {
+                Image(systemName: "map.fill")
+                Text("Map")
             }
 
             NavigationView {

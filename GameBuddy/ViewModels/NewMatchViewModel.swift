@@ -4,15 +4,18 @@
 //
 //  Created by Marc Espasa González on 14/8/24.
 //
+
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import CoreLocation
 
 class NewMatchViewModel: ObservableObject {
     @Published var selectedMatchType: MatchType = .soccer
     @Published var matchDate: Date = Date()
     @Published var maxPlayers: Int = 10
     @Published var matchDescription: String = ""
+    @Published var matchLocation: IdentifiableLocation? // Cambiado a IdentifiableLocation
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
     
@@ -24,7 +27,7 @@ class NewMatchViewModel: ObservableObject {
     }
     
     var isFormValid: Bool {
-        !matchDescription.isEmpty
+        !matchDescription.isEmpty && matchLocation != nil
     }
     
     func createMatch() {
@@ -34,15 +37,21 @@ class NewMatchViewModel: ObservableObject {
             return
         }
         
+        guard let matchLocation = matchLocation else {
+            alertMessage = "Location is not selected."
+            showAlert = true
+            return
+        }
+
         let match = Match(
-            userId: user.email, // Usamos el email del usuario como identificador
+            userId: user.email,
             type: selectedMatchType.rawValue,
-            location: Location(latitude: 0.0, longitude: 0.0), // Replace with real location logic
+            location: Location(latitude: matchLocation.coordinate.latitude, longitude: matchLocation.coordinate.longitude), // Acceder a las coordenadas desde `coordinate`
             date: matchDate,
             players: 1,
             maxPlayers: maxPlayers,
             description: matchDescription,
-            emailsOfPlayers: [user.email] // Agregamos el correo del usuario como primer jugador
+            emailsOfPlayers: [user.email]
         )
         
         saveMatchToFirestore(match)
@@ -67,10 +76,10 @@ class NewMatchViewModel: ObservableObject {
     }
     
     private func resetForm() {
-        // Restablece los campos del formulario a sus valores por defecto
         selectedMatchType = .soccer
         matchDate = Date()
         maxPlayers = 10
         matchDescription = ""
+        matchLocation = nil
     }
 }
