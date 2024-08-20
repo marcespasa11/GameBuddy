@@ -28,24 +28,52 @@ struct MatchDetailView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 15) {
-                        // Mapa en la parte superior
-                        Map(coordinateRegion: $region, annotationItems: [viewModel.match]) { match in
-                            MapMarker(coordinate: CLLocationCoordinate2D(latitude: match.location.latitude, longitude: match.location.longitude), tint: .blue)
+                        // Mapa en la parte superior con botones de zoom
+                        ZStack {
+                            Map(coordinateRegion: $region, annotationItems: [viewModel.match]) { match in
+                                MapMarker(coordinate: CLLocationCoordinate2D(latitude: match.location.latitude, longitude: match.location.longitude), tint: .blue)
+                            }
+                            .frame(height: 300)  // Aumentar el tamaño del mapa
+                            .cornerRadius(10)
+                            .padding(.bottom, 20)
+
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    VStack {
+                                        Button(action: {
+                                            zoomIn()
+                                        }) {
+                                            Image(systemName: "plus.magnifyingglass")
+                                                .padding(10)  // Reducir el tamaño del botón
+                                                .background(Color.white)
+                                                .clipShape(Circle())
+                                                .shadow(radius: 5)
+                                        }
+                                        .padding(.bottom, 8)
+                                        
+                                        Button(action: {
+                                            zoomOut()
+                                        }) {
+                                            Image(systemName: "minus.magnifyingglass")
+                                                .padding(10)  // Reducir el tamaño del botón
+                                                .background(Color.white)
+                                                .clipShape(Circle())
+                                                .shadow(radius: 5)
+                                        }
+                                    }
+                                    .padding()
+                                }
+                            }
                         }
-                        .frame(height: 200)
-                        .cornerRadius(10)
-                        .padding(.bottom, 20)
                         
-                        Text("Match Details")
+                        Text("\(viewModel.match.type)")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .padding(.bottom, 20)
                         
                         Group {
-                            Text("\(viewModel.match.type)")
-                                .font(.title2)
-                                .padding(.bottom, 5)
-                            
                             Text("\(viewModel.address)")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
@@ -216,5 +244,19 @@ struct MatchDetailView: View {
                 proxy.scrollTo(lastComment, anchor: .bottom)
             }
         }
+    }
+
+    private func zoomIn() {
+        var newRegion = region
+        newRegion.span.latitudeDelta /= 2.0
+        newRegion.span.longitudeDelta /= 2.0
+        region = newRegion
+    }
+
+    private func zoomOut() {
+        var newRegion = region
+        newRegion.span.latitudeDelta *= 2.0
+        newRegion.span.longitudeDelta *= 2.0
+        region = newRegion
     }
 }
