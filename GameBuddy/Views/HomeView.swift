@@ -17,9 +17,9 @@ struct HomeView: View {
             VStack(spacing: 8) {
                 Picker("Select Sport", selection: $selectedSport) {
                     Text("All").tag("All")
-                    Text("Handball").tag("Handball")
-                    Text("Soccer").tag("Soccer")
-                    Text("Basketball").tag("Basketball")
+                    Text("Handball").tag("Handball 🤾🏽‍♀️")
+                    Text("Soccer").tag("Soccer ⚽️")
+                    Text("Basketball").tag("Basketball 🏀")
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
