@@ -6,15 +6,21 @@
 //
 
 import SwiftUI
+import MapKit
 import FirebaseFirestoreSwift
 
 struct MatchDetailView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel: MatchDetailViewModel
     @State private var isShowingEditView = false
+    @State private var region: MKCoordinateRegion
 
     init(match: Match, userSession: UserSession) {
         _viewModel = StateObject(wrappedValue: MatchDetailViewModel(match: match, userSession: userSession))
+        _region = State(initialValue: MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: match.location.latitude, longitude: match.location.longitude),
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        ))
     }
 
     var body: some View {
@@ -22,17 +28,13 @@ struct MatchDetailView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 15) {
-                        // Añadir un logo en la parte superior
-                        HStack {
-                            Spacer()
-                            Image(systemName: "sportscourt")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .foregroundColor(.blue)
-                                .padding(.bottom, 20)
-                            Spacer()
+                        // Mapa en la parte superior
+                        Map(coordinateRegion: $region, annotationItems: [viewModel.match]) { match in
+                            MapMarker(coordinate: CLLocationCoordinate2D(latitude: match.location.latitude, longitude: match.location.longitude), tint: .blue)
                         }
+                        .frame(height: 200)
+                        .cornerRadius(10)
+                        .padding(.bottom, 20)
                         
                         Text("Match Details")
                             .font(.largeTitle)
@@ -74,7 +76,6 @@ struct MatchDetailView: View {
                             .font(.headline)
                             .padding(.bottom, 5)
                         
-                        // Lista de correos con el organizador marcado
                         ForEach(viewModel.match.emailsOfPlayers.indices, id: \.self) { index in
                             HStack {
                                 Text(viewModel.match.emailsOfPlayers[index])
@@ -112,13 +113,13 @@ struct MatchDetailView: View {
                                             .foregroundColor(.secondary)
                                     }
                                     .padding(.bottom, 10)
-                                    .id(comment.id) // Añadir ID para la navegación con ScrollViewProxy
+                                    .id(comment.id)
                                 }
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.horizontal)
                         }
-                        .frame(height: 200) // Fija la altura del ScrollView para comentarios
+                        .frame(height: 200)
 
                         Divider().padding(.vertical)
 
@@ -128,7 +129,7 @@ struct MatchDetailView: View {
                             Button(action: {
                                 viewModel.addComment()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                    scrollToBottom(proxy: proxy) // Desplazarse al final al agregar un comentario
+                                    scrollToBottom(proxy: proxy)
                                 }
                             }) {
                                 Text("Send")
@@ -144,18 +145,17 @@ struct MatchDetailView: View {
                         .padding(.vertical, 10)
 
                         Spacer()
-                            .frame(height: 100) // Añadir un espaciador para evitar que la vista sea tapada por los botones flotantes
+                            .frame(height: 100)
                     }
                     .padding()
                     .navigationTitle("Match Detail")
-                    .background(Color(.systemGray6)) // Fondo suave para la vista
+                    .background(Color(.systemGray6))
                 }
                 .onChange(of: viewModel.comments.count) { _ in
                     scrollToBottom(proxy: proxy)
                 }
             }
 
-            // Botones flotantes
             VStack {
                 Spacer()
                 HStack {
@@ -203,8 +203,8 @@ struct MatchDetailView: View {
                             }
                         }
                     }
-                    .padding(.bottom, 16) // Añadir espacio en la parte inferior
-                    .padding(.trailing, 16) // Añadir espacio en la parte derecha
+                    .padding(.bottom, 16)
+                    .padding(.trailing, 16)
                 }
             }
         }
