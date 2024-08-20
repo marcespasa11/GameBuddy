@@ -27,7 +27,7 @@ class NewMatchViewModel: ObservableObject {
     }
     
     var isFormValid: Bool {
-        !matchDescription.isEmpty && matchLocation != nil
+        !matchDescription.isEmpty //&& matchLocation != nil
     }
     
     func createMatch() {

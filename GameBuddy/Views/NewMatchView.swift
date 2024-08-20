@@ -24,73 +24,74 @@ struct NewMatchView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Match Type")) {
-                    Picker("Select Match Type", selection: $viewModel.selectedMatchType) {
-                        ForEach(MatchType.allCases, id: \.self) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-
-                Section(header: Text("Details")) {
-                    DatePicker("Select Date and Time", selection: $viewModel.matchDate, displayedComponents: [.date, .hourAndMinute])
-
-                    Stepper("Max Players: \(viewModel.maxPlayers)", value: $viewModel.maxPlayers, in: 2...20)
-
-                    TextField("Description", text: $viewModel.matchDescription)
-                }
-
-                Section(header: Text("Select Location")) {
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Mapa en la parte superior
                     ZStack {
                         MapViewRepresentable(region: $region, selectedLocation: $selectedLocation)
                             .frame(height: 300)
-
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                        
                         VStack {
                             Spacer()
                             HStack {
                                 Spacer()
                                 VStack {
                                     Button(action: {
-                                        if let mapView = UIApplication.shared.windows.first?.rootViewController?.view.subviews.first(where: { $0 is MKMapView }) as? MKMapView {
-                                            mapView.delegate?.mapView?(mapView, regionDidChangeAnimated: true)
-                                            if let coordinator = mapView.delegate as? MapViewRepresentable.Coordinator {
-                                                coordinator.zoomIn(mapView: mapView)
-                                            }
-                                        }
+                                        zoomIn()
                                     }) {
                                         Image(systemName: "plus.magnifyingglass")
-                                            .padding()
+                                            .padding(10)
                                             .background(Color.white)
                                             .clipShape(Circle())
+                                            .shadow(radius: 5)
                                     }
-                                    .shadow(radius: 5)
                                     .padding(.bottom, 8)
-
+                                    
                                     Button(action: {
-                                        if let mapView = UIApplication.shared.windows.first?.rootViewController?.view.subviews.first(where: { $0 is MKMapView }) as? MKMapView {
-                                            mapView.delegate?.mapView?(mapView, regionDidChangeAnimated: true)
-                                            if let coordinator = mapView.delegate as? MapViewRepresentable.Coordinator {
-                                                coordinator.zoomOut(mapView: mapView)
-                                            }
-                                        }
+                                        zoomOut()
                                     }) {
                                         Image(systemName: "minus.magnifyingglass")
-                                            .padding()
+                                            .padding(10)
                                             .background(Color.white)
                                             .clipShape(Circle())
+                                            .shadow(radius: 5)
                                     }
-                                    .shadow(radius: 5)
                                 }
                                 .padding()
                             }
-                            .padding(.bottom, 50)
                         }
                     }
-                }
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Tipo de Partido
+                        Text("Match Type")
+                            .font(.headline)
+                        Picker("Select Match Type", selection: $viewModel.selectedMatchType) {
+                            ForEach(MatchType.allCases, id: \.self) { type in
+                                Text(type.rawValue).tag(type)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
 
-                Section {
+                        // Detalles del Partido
+                        Text("Details")
+                            .font(.headline)
+                        VStack(spacing: 16) {
+                            DatePicker("Select Date and Time", selection: $viewModel.matchDate, displayedComponents: [.date, .hourAndMinute])
+                                .datePickerStyle(GraphicalDatePickerStyle())
+                                .labelsHidden()
+
+                            Stepper("Max Players: \(viewModel.maxPlayers)", value: $viewModel.maxPlayers, in: 2...20)
+
+                            TextField("Description", text: $viewModel.matchDescription)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                    }
+                    .padding(.horizontal)
+
+                    // Botón de Crear Partido
                     Button(action: {
                         if let selectedLocation = selectedLocation {
                             viewModel.matchLocation = IdentifiableLocation(coordinate: selectedLocation)
@@ -98,16 +99,33 @@ struct NewMatchView: View {
                         }
                     }) {
                         Text("Create Match")
-                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(viewModel.isFormValid && selectedLocation != nil ? Color.blue : Color.gray)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
                     }
-                    .disabled(!viewModel.isFormValid || selectedLocation == nil)
+                    .disabled(!viewModel.isFormValid || selectedLocation == nil) // Verifica que selectedLocation no sea nil
                 }
+                .padding(.top)
             }
             .navigationTitle("New Match")
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(title: Text("Match Creation"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
             }
         }
+    }
+
+    private func zoomIn() {
+        region.span.latitudeDelta /= 2.0
+        region.span.longitudeDelta /= 2.0
+    }
+
+    private func zoomOut() {
+        region.span.latitudeDelta *= 2.0
+        region.span.longitudeDelta *= 2.0
     }
 }
 
@@ -117,4 +135,3 @@ enum MatchType: String, CaseIterable {
     case handball = "Handball 🤾🏽‍♀️"
     case basketball = "Basketball 🏀"
 }
-
