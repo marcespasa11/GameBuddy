@@ -113,8 +113,8 @@ struct NewMatchView: View {
 
 
 enum MatchType: String, CaseIterable {
-    case soccer = "Soccer"
-    case handball = "Handball"
-    case basketball = "Basketball"
+    case soccer = "Soccer ⚽️"
+    case handball = "Handball 🤾🏽‍♀️"
+    case basketball = "Basketball 🏀"
 }
 

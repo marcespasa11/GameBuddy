@@ -14,8 +14,7 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 8) { // Reducir el espacio entre elementos dentro del VStack
-                // Filtro de deportes
+            VStack(spacing: 8) {
                 Picker("Select Sport", selection: $selectedSport) {
                     Text("All").tag("All")
                     Text("Handball").tag("Handball")
@@ -24,9 +23,8 @@ struct HomeView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .padding(.top, 4) // Reducir padding superior
+                .padding(.top, 4)
 
-                // Contenido principal
                 if filteredMatches.isEmpty {
                     VStack {
                         Spacer()
@@ -58,13 +56,13 @@ struct HomeView: View {
                             VStack(alignment: .leading) {
                                 Text(match.type)
                                     .font(.headline)
-                                Text("Location: \(match.location.latitude), \(match.location.longitude)")
+                                Text("\(viewModel.matchAddresses[match.id ?? ""] ?? "Loading address...")")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                Text("Date: \(match.date, style: .date)")
+                                Text("\(match.date, style: .date)")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                Text("Players: \(match.players)/\(match.maxPlayers)")
+                                Text("\(Image(systemName: "person.fill")): \(match.players)/\(match.maxPlayers)")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }

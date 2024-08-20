@@ -40,21 +40,21 @@ struct MatchDetailView: View {
                             .padding(.bottom, 20)
                         
                         Group {
-                            Text("Type: \(viewModel.match.type)")
+                            Text("\(viewModel.match.type)")
                                 .font(.title2)
                                 .padding(.bottom, 5)
                             
-                            Text("Location: \(viewModel.match.location.latitude), \(viewModel.match.location.longitude)")
+                            Text("\(viewModel.address)")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .padding(.bottom, 5)
 
-                            Text("Date: \(viewModel.match.date, style: .date) \(viewModel.match.date, style: .time)")
+                            Text("\(viewModel.match.date, style: .date) \(viewModel.match.date, style: .time)")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .padding(.bottom, 5)
 
-                            Text("Players: \(viewModel.match.players)/\(viewModel.match.maxPlayers)")
+                            Text("\(Image(systemName: "person.fill")): \(viewModel.match.players)/\(viewModel.match.maxPlayers)")
                                 .font(.headline)
                                 .padding(.bottom, 5)
                         }
