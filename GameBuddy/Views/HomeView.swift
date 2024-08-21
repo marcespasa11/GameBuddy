@@ -56,7 +56,7 @@ struct HomeView: View {
                             VStack(alignment: .leading) {
                                 Text(match.type)
                                     .font(.headline)
-                                Text("\(viewModel.matchAddresses[match.id ?? ""] ?? "Loading address...")")
+                                Text("\(match.address ?? "Address not available")")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                 Text("\(match.date, style: .date)")

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
@@ -55,25 +56,47 @@ class NewMatchViewModel: ObservableObject {
 
         saveMatchToFirestore(match)
     }
-
+    
     private func saveMatchToFirestore(_ match: Match) {
-        do {
-            _ = try db.collection("matches").addDocument(from: match) { [weak self] error in
+            let geocoder = CLGeocoder()
+            let location = CLLocation(latitude: match.location.latitude, longitude: match.location.longitude)
+            
+            geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
                 if let error = error {
-                    self?.alertMessage = "Error creating match: \(error.localizedDescription)"
+                    print("Error during reverse geocoding: \(error.localizedDescription)")
+                    self?.alertMessage = "Failed to obtain address"
                     self?.showAlert = true
-                } else {
-                    self?.alertMessage = "Match created successfully!"
+                    return
+                }
+                
+                let placemark = placemarks?.first
+                let addressString = [
+                    placemark?.thoroughfare, // Calle
+                    placemark?.subThoroughfare, // Número
+                    placemark?.locality // Ciudad
+                ].compactMap { $0 }.joined(separator: ", ")
+                
+                var updatedMatch = match
+                updatedMatch.address = addressString // Almacenar la dirección en el partido
+                
+                do {
+                    _ = try self?.db.collection("matches").addDocument(from: updatedMatch) { error in
+                        if let error = error {
+                            self?.alertMessage = "Error creating match: \(error.localizedDescription)"
+                            self?.showAlert = true
+                        } else {
+                            self?.alertMessage = "Match created successfully!"
+                            self?.showAlert = true
+                            self?.resetForm()
+                            NotificationCenter.default.post(name: NSNotification.Name("MatchCreated"), object: nil)
+                        }
+                    }
+                } catch {
+                    self?.alertMessage = "Error encoding match: \(error.localizedDescription)"
                     self?.showAlert = true
-                    self?.resetForm()
-                    NotificationCenter.default.post(name: NSNotification.Name("MatchCreated"), object: nil)
                 }
             }
-        } catch {
-            self.alertMessage = "Error encoding match: \(error.localizedDescription)"
-            self.showAlert = true
         }
-    }
 
     func resetForm() {
         selectedMatchType = .soccer

@@ -8,7 +8,6 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
-import CoreLocation
 
 class MatchDetailViewModel: ObservableObject {
     @Published var match: Match
@@ -18,7 +17,7 @@ class MatchDetailViewModel: ObservableObject {
     @Published var alertMessage: String = ""
     private var db = Firestore.firestore()
     @Published var userSession: UserSession
-    @Published var address: String = "Loading address..."
+    @Published var address: String
 
     private var matchListener: ListenerRegistration?
     private var commentsListener: ListenerRegistration?
@@ -26,6 +25,7 @@ class MatchDetailViewModel: ObservableObject {
     init(match: Match, userSession: UserSession) {
         self.match = match
         self.userSession = userSession
+        self.address = match.address ?? "Address not available"
         
         if match.id == nil {
             print("Warning: Match ID is nil. Ensure match is initialized properly.")
@@ -34,7 +34,6 @@ class MatchDetailViewModel: ObservableObject {
             self.checkIfUserJoined()
             self.listenToMatchChanges()
             self.loadComments()
-            self.reverseGeocodeLocation(latitude: match.location.latitude, longitude: match.location.longitude)
         }
     }
 
@@ -138,6 +137,7 @@ class MatchDetailViewModel: ObservableObject {
                     let updatedMatch = try document.data(as: Match.self)
                     DispatchQueue.main.async {
                         self?.match = updatedMatch
+                        self?.address = updatedMatch.address ?? "Address not available"
                         self?.checkIfUserJoined() // Revisa si el usuario sigue unido después de la actualización
                     }
                 } catch {
@@ -183,39 +183,5 @@ class MatchDetailViewModel: ObservableObject {
     deinit {
         matchListener?.remove()
         commentsListener?.remove()
-    }
-    
-    func reverseGeocodeLocation(latitude: Double, longitude: Double) {
-        let location = CLLocation(latitude: latitude, longitude: longitude)
-        let geocoder = CLGeocoder()
-        
-        geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
-            if let error = error {
-                print("Error during reverse geocoding: \(error)")
-                self?.address = "Address not available"
-                return
-            }
-            
-            if let placemark = placemarks?.first {
-                var addressString = ""
-                if let street = placemark.thoroughfare {
-                    addressString += street
-                }
-                if let number = placemark.subThoroughfare {
-                    addressString += " \(number)"
-                }
-                if let city = placemark.locality {
-                    addressString += ", \(city)"
-                }
-                if addressString.isEmpty {
-                    addressString = "Address not available"
-                }
-                DispatchQueue.main.async {
-                    self?.address = addressString
-                }
-            } else {
-                self?.address = "Address not available"
-            }
-        }
     }
 }
