@@ -21,7 +21,15 @@ struct MatchMapView: UIViewRepresentable {
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        mapView.setRegion(region, animated: true)
+        // Actualizar la región solo si es necesario
+        if mapView.region.center.latitude != region.center.latitude ||
+            mapView.region.center.longitude != region.center.longitude ||
+            mapView.region.span.latitudeDelta != region.span.latitudeDelta ||
+            mapView.region.span.longitudeDelta != region.span.longitudeDelta {
+            mapView.setRegion(region, animated: true)
+        }
+
+        // Actualizar las anotaciones
         mapView.removeAnnotations(mapView.annotations)
 
         let annotations = viewModel.matches.map { match -> MatchAnnotation in
@@ -29,8 +37,7 @@ struct MatchMapView: UIViewRepresentable {
             annotation.title = match.type
             annotation.subtitle = "\(match.players)/\(match.maxPlayers) players"
             annotation.coordinate = CLLocationCoordinate2D(latitude: match.location.latitude, longitude: match.location.longitude)
-            annotation.matchID = match.id // Store match ID in custom annotation
-            annotation.participantsInfo = "\(match.players)/\(match.maxPlayers) players" // Guardar la información de los jugadores
+            annotation.matchID = match.id
             return annotation
         }
 
@@ -58,15 +65,14 @@ struct MatchMapView: UIViewRepresentable {
                 annotationView = MKPinAnnotationView(annotation: matchAnnotation, reuseIdentifier: identifier)
                 annotationView?.canShowCallout = true
                 annotationView?.pinTintColor = .blue
+                
+                // Añadir un botón de detalle a la anotación
+                let detailButton = UIButton(type: .detailDisclosure)
+                annotationView?.rightCalloutAccessoryView = detailButton
             } else {
                 annotationView?.annotation = matchAnnotation
             }
             
-            let detailLabel = UILabel()
-            detailLabel.numberOfLines = 0
-            detailLabel.text = matchAnnotation.participantsInfo
-            annotationView?.detailCalloutAccessoryView = detailLabel
-
             return annotationView
         }
 
@@ -75,9 +81,19 @@ struct MatchMapView: UIViewRepresentable {
                   let matchID = matchAnnotation.matchID else { return }
             parent.selectedMatch = parent.viewModel.matches.first { $0.id == matchID }
         }
+
+        func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+            guard let matchAnnotation = view.annotation as? MatchAnnotation,
+                  let matchID = matchAnnotation.matchID else { return }
+            parent.selectedMatch = parent.viewModel.matches.first { $0.id == matchID }
+        }
+
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            // Actualizar la región vinculada al mapa cuando el usuario la cambie (por zoom o arrastre)
+            parent.region = mapView.region
+        }
     }
 }
-
 
 struct MatchMapViewContainer: View {
     @StateObject private var mapViewModel = MatchMapViewModel()
@@ -103,7 +119,7 @@ struct MatchMapViewContainer: View {
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .padding(.bottom, 70)
+                    .padding(.bottom, 80)
                 }
             }
 
@@ -144,7 +160,6 @@ struct MatchMapViewContainer: View {
         var newRegion = region
         newRegion.span.latitudeDelta /= 2.0
         newRegion.span.longitudeDelta /= 2.0
-        newRegion.center = region.center
         region = newRegion
     }
 
@@ -152,13 +167,10 @@ struct MatchMapViewContainer: View {
         var newRegion = region
         newRegion.span.latitudeDelta *= 2.0
         newRegion.span.longitudeDelta *= 2.0
-        newRegion.center = region.center
         region = newRegion
     }
 }
 
 class MatchAnnotation: MKPointAnnotation {
     var matchID: String?
-    var participantsInfo: String? // Nueva propiedad para la información de los participantes
 }
-
