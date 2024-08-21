@@ -27,6 +27,10 @@ struct MapViewRepresentable: UIViewRepresentable {
             parent.selectedLocation = coordinate
         }
 
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            parent.region = mapView.region
+        }
+
         func zoomIn(mapView: MKMapView) {
             var region = mapView.region
             region.span.latitudeDelta /= 2.0
@@ -58,7 +62,13 @@ struct MapViewRepresentable: UIViewRepresentable {
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        mapView.setRegion(region, animated: true)
+        if mapView.region.center.latitude != region.center.latitude ||
+            mapView.region.center.longitude != region.center.longitude ||
+            mapView.region.span.latitudeDelta != region.span.latitudeDelta ||
+            mapView.region.span.longitudeDelta != region.span.longitudeDelta {
+            mapView.setRegion(region, animated: true)
+        }
+        
         mapView.removeAnnotations(mapView.annotations)
 
         if let location = selectedLocation {

@@ -107,7 +107,7 @@ struct NewMatchView: View {
                             .cornerRadius(10)
                             .padding(.horizontal)
                     }
-                    .disabled(!viewModel.isFormValid || selectedLocation == nil) // Verifica que selectedLocation no sea nil
+                    .disabled(!viewModel.isFormValid || selectedLocation == nil)
                 }
                 .padding(.top)
             }
