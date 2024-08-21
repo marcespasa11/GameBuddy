@@ -112,6 +112,9 @@ struct NewMatchView: View {
                 .padding(.top)
             }
             .navigationTitle("New Match")
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("MatchCreated"))) { _ in
+                resetMap()
+            }
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(title: Text("Match Creation"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
             }
@@ -126,6 +129,14 @@ struct NewMatchView: View {
     private func zoomOut() {
         region.span.latitudeDelta *= 2.0
         region.span.longitudeDelta *= 2.0
+    }
+
+    private func resetMap() {
+        region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 39.4699, longitude: -0.3763), // Coordenadas iniciales para Valencia, España
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        )
+        selectedLocation = nil
     }
 }
 

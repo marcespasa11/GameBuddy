@@ -14,10 +14,10 @@ class NewMatchViewModel: ObservableObject {
     @Published var matchDate: Date = Date()
     @Published var maxPlayers: Int = 10
     @Published var matchDescription: String = ""
-    @Published var matchLocation: IdentifiableLocation? // Cambiado a IdentifiableLocation
+    @Published var matchLocation: IdentifiableLocation?
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
-
+    
     private var db = Firestore.firestore()
     @Published var userSession: UserSession
 
@@ -26,7 +26,7 @@ class NewMatchViewModel: ObservableObject {
     }
 
     var isFormValid: Bool {
-        !matchDescription.isEmpty// && matchLocation != nil
+        !matchDescription.isEmpty //&& matchLocation != nil
     }
 
     func createMatch() {
@@ -66,7 +66,6 @@ class NewMatchViewModel: ObservableObject {
                     self?.alertMessage = "Match created successfully!"
                     self?.showAlert = true
                     self?.resetForm()
-                    // Optional: Notify the HomeViewModel to refresh data
                     NotificationCenter.default.post(name: NSNotification.Name("MatchCreated"), object: nil)
                 }
             }
@@ -76,7 +75,7 @@ class NewMatchViewModel: ObservableObject {
         }
     }
 
-    private func resetForm() {
+    func resetForm() {
         selectedMatchType = .soccer
         matchDate = Date()
         maxPlayers = 10
@@ -84,4 +83,3 @@ class NewMatchViewModel: ObservableObject {
         matchLocation = nil
     }
 }
-
