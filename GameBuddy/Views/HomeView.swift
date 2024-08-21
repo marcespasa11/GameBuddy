@@ -11,10 +11,12 @@ struct HomeView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel = HomeViewModel()
     @State private var selectedSport: String = "All"
+    @State private var isAscending: Bool = true // Estado para controlar la ordenación
 
     var body: some View {
-        NavigationView {
+        ZStack {
             VStack(spacing: 8) {
+                // Filtro de deportes
                 Picker("Select Sport", selection: $selectedSport) {
                     Text("All").tag("All")
                     Text("Handball").tag("Handball 🤾🏽‍♀️")
@@ -25,6 +27,7 @@ struct HomeView: View {
                 .padding(.horizontal)
                 .padding(.top, 4)
 
+                // Contenido principal
                 if filteredMatches.isEmpty {
                     VStack {
                         Spacer()
@@ -62,7 +65,7 @@ struct HomeView: View {
                                 Text("\(match.date, style: .date)")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                Text("\(Image(systemName: "person.fill")): \(match.players)/\(match.maxPlayers)")
+                                Text("\(Image(systemName: "person.3.fill")): \(match.players)/\(match.maxPlayers)")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -75,6 +78,33 @@ struct HomeView: View {
                 viewModel.fetchMatches()
             }
             .navigationTitle("Home")
+
+            // Botón flotante en la parte inferior derecha
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        isAscending.toggle()
+                        if isAscending {
+                            viewModel.sortMatchesAscending()
+                        } else {
+                            viewModel.sortMatchesDescending()
+                        }
+                    }) {
+                        Image(systemName: isAscending ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .padding()
+                    }
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .shadow(radius: 5)
+                    .padding(.trailing, 16)
+                    .padding(.bottom, 16)
+                }
+            }
         }
     }
 

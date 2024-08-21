@@ -84,7 +84,7 @@ struct MatchDetailView: View {
                                 .foregroundColor(.gray)
                                 .padding(.bottom, 5)
 
-                            Text("\(Image(systemName: "person.fill")): \(viewModel.match.players)/\(viewModel.match.maxPlayers)")
+                            Text("\(Image(systemName: "person.3.fill")): \(viewModel.match.players)/\(viewModel.match.maxPlayers)")
                                 .font(.headline)
                                 .padding(.bottom, 5)
                         }

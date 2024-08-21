@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
+import CoreLocation
 
 class HomeViewModel: ObservableObject {
     @Published var matches: [Match] = []
@@ -36,9 +37,16 @@ class HomeViewModel: ObservableObject {
                     }
                     return nil
                 }
-
-                print("Fetched matches: \(self?.matches ?? [])")
+                self?.sortMatchesAscending()
             }
         }
+    }
+    
+    func sortMatchesAscending() {
+        matches.sort { $0.date < $1.date }
+    }
+    
+    func sortMatchesDescending() {
+        matches.sort { $0.date > $1.date }
     }
 }
