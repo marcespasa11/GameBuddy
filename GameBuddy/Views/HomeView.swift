@@ -92,7 +92,7 @@ struct HomeView: View {
                             viewModel.sortMatchesDescending()
                         }
                     }) {
-                        Image(systemName: isAscending ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                        Image(systemName: isAscending ? "arrow.up.arrow.down.circle" : "arrow.up.arrow.down.circle.fill")
                             .resizable()
                             .frame(width: 32, height: 32)
                             .padding()

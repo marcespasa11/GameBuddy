@@ -25,7 +25,7 @@ struct RegisterView: View {
                 Button(action: {
                     showingImagePicker = true
                 }) {
-                    Text("Seleccionar Foto de Perfil")
+                    Text("Select profile image")
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
@@ -33,7 +33,7 @@ struct RegisterView: View {
                 }
             }
 
-            TextField("Nombre", text: $viewModel.name)
+            TextField("Name", text: $viewModel.name)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(8)
@@ -43,12 +43,12 @@ struct RegisterView: View {
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(8)
 
-            SecureField("Contraseña", text: $viewModel.password)
+            SecureField("Password", text: $viewModel.password)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(8)
 
-            SecureField("Confirmar Contraseña", text: $viewModel.confirmPassword)
+            SecureField("Confirm Password", text: $viewModel.confirmPassword)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(8)
@@ -61,7 +61,7 @@ struct RegisterView: View {
             Button(action: {
                 viewModel.register(userSession: userSession)
             }) {
-                Text("Registrar")
+                Text("Register")
                     .padding()
                     .background(Color.green)
                     .foregroundColor(.white)
