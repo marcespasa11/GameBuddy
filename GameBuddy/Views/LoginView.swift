@@ -16,6 +16,12 @@ struct LoginView: View {
     var body: some View {
         NavigationView {
             VStack {
+                Image("logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300, height: 300)
+                    .padding(.bottom, 50)
+                
                 TextField("Email", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
@@ -50,9 +56,7 @@ struct LoginView: View {
                     EmptyView()
                 }
             }
-            .padding()
-            .navigationTitle("GameBuddy")
-        }
+            .padding()        }
     }
 }
 
