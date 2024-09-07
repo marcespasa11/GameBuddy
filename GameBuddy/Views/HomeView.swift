@@ -11,12 +11,12 @@ struct HomeView: View {
     @EnvironmentObject var userSession: UserSession
     @StateObject private var viewModel = HomeViewModel()
     @State private var selectedSport: String = "All"
-    @State private var isAscending: Bool = true // Estado para controlar la ordenación
+    @State private var isAscending: Bool = true
 
     var body: some View {
         ZStack {
             VStack(spacing: 8) {
-                // Filtro de deportes
+                
                 Picker("Select Sport", selection: $selectedSport) {
                     Text("All").tag("All")
                     Text("Handball").tag("Handball 🤾🏽‍♀️")
@@ -27,7 +27,7 @@ struct HomeView: View {
                 .padding(.horizontal)
                 .padding(.top, 4)
 
-                // Contenido principal
+            
                 if filteredMatches.isEmpty {
                     VStack {
                         Spacer()
@@ -79,7 +79,7 @@ struct HomeView: View {
             }
             .navigationTitle("Home")
 
-            // Botón flotante en la parte inferior derecha
+            
             VStack {
                 Spacer()
                 HStack {
