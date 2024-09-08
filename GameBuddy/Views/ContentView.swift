@@ -26,7 +26,7 @@ struct MainTabView: View {
         TabView {
             NavigationView {
                 HomeView()
-                    .environmentObject(userSession)
+                    //.environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "house.fill")
@@ -35,7 +35,7 @@ struct MainTabView: View {
             
             NavigationView {
                 MatchMapViewContainer()
-                    .environmentObject(userSession)
+                    //.environmentObject(userSession)
                     .edgesIgnoringSafeArea(.all)
                     .navigationTitle("Match Locations")
             }
@@ -46,7 +46,7 @@ struct MainTabView: View {
 
             NavigationView {
                 NewMatchView()
-                .environmentObject(userSession)
+                //.environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "plus.circle.fill")
@@ -55,7 +55,7 @@ struct MainTabView: View {
             
             NavigationView {
                 ProfileView()
-                    .environmentObject(userSession)
+                    //.environmentObject(userSession)
             }
             .tabItem {
                 Image(systemName: "person.fill")

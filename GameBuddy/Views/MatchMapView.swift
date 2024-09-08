@@ -112,8 +112,7 @@ struct MatchMapViewContainer: View {
             if let selectedMatch = selectedMatch {
                 VStack {
                     Spacer()
-                    NavigationLink(destination: MatchDetailView(match: selectedMatch, userSession: userSession)
-                        .environmentObject(userSession)) {
+                    NavigationLink(destination: MatchDetailView(match: selectedMatch, userSession: userSession)) {
                         Text("Go to Match")
                             .bold()
                             .padding()

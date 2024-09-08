@@ -54,8 +54,7 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List(filteredMatches) { match in
-                        NavigationLink(destination: MatchDetailView(match: match, userSession: userSession)
-                            .environmentObject(userSession)) {
+                        NavigationLink(destination: MatchDetailView(match: match, userSession: userSession)) {
                             VStack(alignment: .leading) {
                                 Text(match.type)
                                     .font(.headline)

@@ -13,8 +13,8 @@ import GoogleMaps
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    FirebaseApp.configure()
-    //Auth.auth().useEmulator(withHost: "localhost", port: 9099)
+      FirebaseApp.configure()
+      
       if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GOOGLE_MAPS_API_KEY") as? String
       {
           GMSServices.provideAPIKey(apiKey)
