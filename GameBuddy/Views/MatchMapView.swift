@@ -96,6 +96,7 @@ struct MatchMapView: UIViewRepresentable {
 }
 
 struct MatchMapViewContainer: View {
+    @EnvironmentObject var userSession: UserSession
     @StateObject private var mapViewModel = MatchMapViewModel()
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 39.4699, longitude: -0.3763), // Coordenadas iniciales para Valencia, España
@@ -111,7 +112,8 @@ struct MatchMapViewContainer: View {
             if let selectedMatch = selectedMatch {
                 VStack {
                     Spacer()
-                    NavigationLink(destination: MatchDetailView(match: selectedMatch, userSession: UserSession())) {
+                    NavigationLink(destination: MatchDetailView(match: selectedMatch, userSession: userSession)
+                        .environmentObject(userSession)) {
                         Text("Go to Match")
                             .bold()
                             .padding()

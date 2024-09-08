@@ -44,23 +44,23 @@ class UserSession: ObservableObject {
     }
     
     func fetchUserData(userID: String, completion: @escaping (User?) -> Void) {
-            let db = Firestore.firestore()
-            db.collection("users").document(userID).getDocument { (document, error) in
-                if let document = document, document.exists {
-                    if let data = document.data() {
-                        let user = User(
-                            email: data["email"] as? String ?? "",
-                            name: data["name"] as? String ?? "Name not available",
-                            photoURL: data["photoURL"] as? String
-                        )
-                        completion(user)
-                    } else {
-                        completion(nil)
-                    }
+        let db = Firestore.firestore()
+        db.collection("users").document(userID).getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let data = document.data() {
+                    let user = User(
+                        email: data["email"] as? String ?? "",
+                        name: data["name"] as? String ?? "Name not available",
+                        photoURL: data["photoURL"] as? String
+                    )
+                    completion(user)
                 } else {
-                    print("Document does not exist: \(String(describing: error?.localizedDescription))")
                     completion(nil)
                 }
+            } else {
+                print("Document does not exist: \(String(describing: error?.localizedDescription))")
+                completion(nil)
             }
         }
+    }
 }

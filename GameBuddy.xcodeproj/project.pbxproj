@@ -51,7 +51,6 @@
 		7E9F5ABD2C3EE72E00667FB7 /* GameBuddyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5ABC2C3EE72E00667FB7 /* GameBuddyTests.swift */; };
 		7E9F5AC72C3EE72E00667FB7 /* GameBuddyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5AC62C3EE72E00667FB7 /* GameBuddyUITests.swift */; };
 		7E9F5AC92C3EE72E00667FB7 /* GameBuddyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9F5AC82C3EE72E00667FB7 /* GameBuddyUITestsLaunchTests.swift */; };
-		7E9F5AD62C4D798600667FB7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7E9F5AD52C4D798600667FB7 /* GoogleService-Info.plist */; };
 		7E9F5ADA2C4D7E1900667FB7 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 7E9F5AD92C4D7E1900667FB7 /* FirebaseAnalytics */; };
 		7E9F5ADC2C4D7E1900667FB7 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7E9F5ADB2C4D7E1900667FB7 /* FirebaseAnalyticsSwift */; };
 		7E9F5ADE2C4D7E1900667FB7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7E9F5ADD2C4D7E1900667FB7 /* FirebaseAuth */; };
@@ -59,6 +58,7 @@
 		7E9F5AE22C4D7E1900667FB7 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7E9F5AE12C4D7E1900667FB7 /* FirebaseDatabaseSwift */; };
 		7E9F5AE42C4D7E1900667FB7 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 7E9F5AE32C4D7E1900667FB7 /* FirebaseFunctions */; };
 		7E9F5AE62C4D7E1900667FB7 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7E9F5AE52C4D7E1900667FB7 /* FirebaseStorage */; };
+		7EA8A4B82C8D957B0075D426 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7E9F5AD72C4D799000667FB7 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,7 +102,7 @@
 		7E2590452C6F5A9800259A3E /* MatchMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMapViewModel.swift; sourceTree = "<group>"; };
 		7E2590472C6F5AF400259A3E /* MatchMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMapView.swift; sourceTree = "<group>"; };
 		7E2590492C6FCBB000259A3E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		7E25904A2C708F8A00259A3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7E25904A2C708F8A00259A3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7E25904B2C7096ED00259A3E /* IdentifiableLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableLocation.swift; sourceTree = "<group>"; };
 		7E25904D2C70C15100259A3E /* MapViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewRepresentable.swift; sourceTree = "<group>"; };
 		7E9F5AA82C3EE72D00667FB7 /* GameBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,7 +115,6 @@
 		7E9F5AC22C3EE72E00667FB7 /* GameBuddyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameBuddyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E9F5AC62C3EE72E00667FB7 /* GameBuddyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBuddyUITests.swift; sourceTree = "<group>"; };
 		7E9F5AC82C3EE72E00667FB7 /* GameBuddyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBuddyUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		7E9F5AD52C4D798600667FB7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7E9F5AD72C4D799000667FB7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +156,7 @@
 		7E25900D2C51646600259A3E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7E25904B2C7096ED00259A3E /* IdentifiableLocation.swift */,
 				7E2590052C4F08E300259A3E /* User.swift */,
 				7E2590072C4F0EE300259A3E /* Match.swift */,
 				7E2590092C4F11F200259A3E /* Location.swift */,
@@ -168,6 +168,9 @@
 		7E25900E2C51647C00259A3E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7E2590342C594CA900259A3E /* ImagePicker.swift */,
+				7E25904D2C70C15100259A3E /* MapViewRepresentable.swift */,
+				7E9F5AAD2C3EE72D00667FB7 /* ContentView.swift */,
 				7E2590122C516E0900259A3E /* RegisterView.swift */,
 				7E2590162C52E5FF00259A3E /* LoginView.swift */,
 				7E2590202C54EF4600259A3E /* HomeView.swift */,
@@ -198,8 +201,6 @@
 		7E9F5A9F2C3EE72D00667FB7 = {
 			isa = PBXGroup;
 			children = (
-				7E2590492C6FCBB000259A3E /* Config.xcconfig */,
-				7E9F5AD52C4D798600667FB7 /* GoogleService-Info.plist */,
 				7E9F5AAA2C3EE72D00667FB7 /* GameBuddy */,
 				7E9F5ABB2C3EE72E00667FB7 /* GameBuddyTests */,
 				7E9F5AC52C3EE72E00667FB7 /* GameBuddyUITests */,
@@ -220,17 +221,12 @@
 		7E9F5AAA2C3EE72D00667FB7 /* GameBuddy */ = {
 			isa = PBXGroup;
 			children = (
-				7E25904A2C708F8A00259A3E /* Info.plist */,
+				7EA8A4B92C8D997A0075D426 /* Configuration */,
 				7E25900F2C51648900259A3E /* ViewModels */,
 				7E25900E2C51647C00259A3E /* Views */,
 				7E25900D2C51646600259A3E /* Models */,
-				7E9F5AD72C4D799000667FB7 /* GoogleService-Info.plist */,
 				7E9F5AAB2C3EE72D00667FB7 /* GameBuddyApp.swift */,
-				7E9F5AAD2C3EE72D00667FB7 /* ContentView.swift */,
 				7E2590282C5807F500259A3E /* UserSession.swift */,
-				7E2590342C594CA900259A3E /* ImagePicker.swift */,
-				7E25904B2C7096ED00259A3E /* IdentifiableLocation.swift */,
-				7E25904D2C70C15100259A3E /* MapViewRepresentable.swift */,
 				7E9F5AAF2C3EE72E00667FB7 /* Assets.xcassets */,
 				7E9F5AB12C3EE72E00667FB7 /* Preview Content */,
 			);
@@ -260,6 +256,16 @@
 				7E9F5AC82C3EE72E00667FB7 /* GameBuddyUITestsLaunchTests.swift */,
 			);
 			path = GameBuddyUITests;
+			sourceTree = "<group>";
+		};
+		7EA8A4B92C8D997A0075D426 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				7E25904A2C708F8A00259A3E /* Info.plist */,
+				7E2590492C6FCBB000259A3E /* Config.xcconfig */,
+				7E9F5AD72C4D799000667FB7 /* GoogleService-Info.plist */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -384,7 +390,7 @@
 			files = (
 				7E9F5AB32C3EE72E00667FB7 /* Preview Assets.xcassets in Resources */,
 				7E9F5AB02C3EE72E00667FB7 /* Assets.xcassets in Resources */,
-				7E9F5AD62C4D798600667FB7 /* GoogleService-Info.plist in Resources */,
+				7EA8A4B82C8D957B0075D426 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,7 +619,7 @@
 				DEVELOPMENT_TEAM = D9WQG83GXB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = GameBuddy/Info.plist;
+				INFOPLIST_FILE = GameBuddy/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -643,7 +649,7 @@
 				DEVELOPMENT_TEAM = D9WQG83GXB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = GameBuddy/Info.plist;
+				INFOPLIST_FILE = GameBuddy/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

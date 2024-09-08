@@ -35,6 +35,7 @@ struct MainTabView: View {
             
             NavigationView {
                 MatchMapViewContainer()
+                    .environmentObject(userSession)
                     .edgesIgnoringSafeArea(.all)
                     .navigationTitle("Match Locations")
             }
